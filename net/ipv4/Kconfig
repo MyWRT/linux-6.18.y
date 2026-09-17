@@ -690,6 +690,15 @@ config TCP_CONG_BBR1
 	  congestion control name. This allows comparison with the BBRv3
 	  implementation registered as "bbr".
 
+config TCP_CONG_BBRPLUS
+	tristate "BBRPlus TCP"
+	default y
+	help
+	  BBRPlus is an enhanced version of BBR (Bottleneck Bandwidth and RTT).
+	  It was originally introduced by dog250 and cx9208. Like BBR, it
+	  requires pacing, using either TCP internal pacing or the fq
+	  ("Fair Queue") pacing packet scheduler.
+
 choice
 	prompt "Default TCP congestion control"
 	default DEFAULT_CUBIC
@@ -729,6 +738,8 @@ choice
 
 	config DEFAULT_BBR1
 		bool "BBR1" if TCP_CONG_BBR1=y
+	config DEFAULT_BBRPLUS
+		bool "BBRPlus" if TCP_CONG_BBRPLUS=y
 
 	config DEFAULT_RENO
 		bool "Reno"
@@ -755,6 +766,7 @@ config DEFAULT_TCP_CONG
 	default "cdg" if DEFAULT_CDG
 	default "bbr" if DEFAULT_BBR
 	default "bbr1" if DEFAULT_BBR1
+	default "bbrplus" if DEFAULT_BBRPLUS
 	default "cubic"
 
 config TCP_SIGPOOL
