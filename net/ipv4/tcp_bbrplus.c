@@ -379,7 +379,7 @@ static void bbr_set_pacing_rate(struct sock *sk, u32 bw, int gain)
 }
 
 /* override sysctl_tcp_min_tso_segs */
-__bpf_kfunc static u32 bbr_min_tso_segs(struct sock *sk)
+static u32 bbr_min_tso_segs(struct sock *sk)
 {
         return READ_ONCE(sk->sk_pacing_rate) < (bbr_min_tso_rate >> 3) ? 1 : 2;
 }
@@ -400,6 +400,16 @@ static u32 bbr_tso_autosize(const struct sock *sk, unsigned int mss_now,
 	bytes = min_t(unsigned long, bytes, sk->sk_gso_max_size);
 
 	return max_t(u32, bytes / mss_now, min_tso_segs);
+}
+
+__bpf_kfunc static u32 bbrplus_tso_segs(struct sock *sk,
+					unsigned int mss_now)
+{
+	u32 min_tso, tso_segs;
+
+	min_tso = bbr_min_tso_segs(sk);
+	tso_segs = bbr_tso_autosize(sk, mss_now, min_tso);
+	return min_t(u32, tso_segs, sk->sk_gso_max_segs);
 }
 
 /* Return count of segments we want in the skbs we send, or 0 for default. */
@@ -1176,7 +1186,7 @@ static struct tcp_congestion_ops tcp_bbr_cong_ops __read_mostly = {
     .undo_cwnd  = bbr_undo_cwnd,
     .cwnd_event = bbr_cwnd_event,
     .ssthresh   = bbr_ssthresh,
-    .min_tso_segs = bbr_min_tso_segs,
+    .tso_segs   = bbrplus_tso_segs,
     .get_info   = bbr_get_info,
     .set_state  = bbr_set_state,
 };
@@ -1188,7 +1198,7 @@ BTF_ID_FLAGS(func, bbr_sndbuf_expand)
 BTF_ID_FLAGS(func, bbr_undo_cwnd)
 BTF_ID_FLAGS(func, bbr_cwnd_event)
 BTF_ID_FLAGS(func, bbr_ssthresh)
-BTF_ID_FLAGS(func, bbr_min_tso_segs)
+BTF_ID_FLAGS(func, bbrplus_tso_segs)
 BTF_ID_FLAGS(func, bbr_set_state)
 BTF_KFUNCS_END(tcp_bbr_check_kfunc_ids)
 
