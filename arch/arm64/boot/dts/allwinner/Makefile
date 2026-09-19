@@ -59,6 +59,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero2w.dtb
 dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero3.dtb
 dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-painet-p3.dtb
 dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-painet-p5.dtb
+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-painet-p5-v2.dtb
 dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-transpeed-8k618-t.dtb
 dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-vontar-h618.dtb
 dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-x98h.dtb
