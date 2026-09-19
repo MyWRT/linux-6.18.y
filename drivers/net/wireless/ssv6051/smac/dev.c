@@ -659,12 +659,6 @@ static void ssv6200_hw_set_group_type(struct ssv_hw *sh, u8 type)
 	dev_dbg(sh->sc->dev, "Set group key type %d\n", type);
 }
 
-static void ssv6xxx_reset_sec_module(struct ssv_softc *sc)
-{
-	ssv6200_hw_set_group_type(sc->sh, ME_NONE);
-	ssv6200_hw_set_pair_type(sc->sh, ME_NONE);
-}
-
 static int hw_update_watch_wsid(struct ssv_softc *sc, struct ieee80211_sta *sta,
 				struct ssv_sta_info *sta_info, int sta_idx,
 				int rx_hw_sec, int ops)

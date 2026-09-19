@@ -1219,6 +1219,7 @@ int _dump_BA_notification(char *buf,
 	return ((size_t)buf - (size_t)orig_buf);
 }
 
+#ifdef CONFIG_SSV6XXX_DEBUGFS
 int _dump_ba_skb(char *buf, int buf_size, struct sk_buff *ba_skb)
 {
 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)(ba_skb->data
@@ -1240,6 +1241,7 @@ int _dump_ba_skb(char *buf, int buf_size, struct sk_buff *ba_skb)
 	prt_size = prt_size + _dump_BA_notification(buf, ba_notification);
 	return prt_size;
 }
+#endif
 
 static bool _ssn_to_bit_idx(u32 start_ssn, u32 mpdu_ssn, u32 * word_idx,
 			    u32 * bit_idx)
@@ -1804,14 +1806,6 @@ static void _reset_ampdu_mib(struct ssv_softc *sc,
 	for (i = 0; i < WMM_TID_NUM; i++) {
 		ssv_sta_priv->ampdu_tid[i].ampdu_mib_reset = 1;
 	}
-}
-
-static void ssv6xxx_ampdu_mib_reset(struct ieee80211_hw *hw)
-{
-	struct ssv_softc *sc = hw->priv;
-	if (sc == NULL)
-		return;
-	ssv6xxx_foreach_sta(sc, _reset_ampdu_mib, NULL);
 }
 
 #ifdef CONFIG_SSV6XXX_DEBUGFS
