@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+/dts-v1/;
+
+#include "sun50i-h618-painet-p5.dts"
+
+/ {
+	model = "Painet P5 v2";
+	compatible = "painet,p5-v2", "painet,p5", "allwinner,sun50i-h618";
+};
+
+/* Gigabit Ethernet: RTL8211F RGMII PHY on emac0 - match Android config */
+&emac0 {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&x98h_rgmii_pins>;
+	pinctrl-1 = <&x98h_rgmii_sleep_pins>;
+	phy-mode = "rgmii";
+	phy-handle = <&rgmii_phy>;
+	/delete-property/ phy-io-supply;
+	allwinner,tx-delay-ps = <600>;
+	allwinner,rx-delay-ps = <1400>;
+	status = "okay";
+};
+
+&mdio0 {
+	rgmii_phy: ethernet-phy@1 {
+		compatible = "ethernet-phy-ieee802.3-c22";
+		reg = <1>;
+		/* Reset circuit */
+		reset-gpios = <&pio 8 16 GPIO_ACTIVE_HIGH>; /* PI16 */
+		reset-assert-us = <30000>;
+		reset-deassert-us = <150000>;
+	};
+};
+
+&pio {
+	/*
+	 * The dtsi default ext_rgmii_pins omits PI6 (EMAC0_TXCLK);
+	 * this board routes the full PI0-PI15 RGMII group.
+	 */
+	x98h_rgmii_pins: x98h-rgmii-pins {
+		pins = "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6",
+		       "PI7", "PI8", "PI9", "PI10", "PI11", "PI12",
+		       "PI13", "PI14", "PI15";
+		function = "emac0";
+		drive-strength = <40>;
+		bias-pull-up;
+	};
+
+	x98h_rgmii_sleep_pins: x98h-rgmii-sleep-pins {
+		pins = "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6",
+		       "PI7", "PI8", "PI9", "PI10", "PI11", "PI12",
+		       "PI13", "PI14", "PI15";
+		function = "gpio_in";
+	};
+};

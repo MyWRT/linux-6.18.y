@@ -785,11 +785,14 @@ ieee80211_tx_h_rate_ctrl(struct ieee80211_tx_data *tx)
 		tx->rate = info->control.rates[0];
 	}
 
-	if (txrc.reported_rate.idx < 0) {
+	if (txrc.reported_rate.idx < 0)
 		txrc.reported_rate = tx->rate;
-		if (tx->sta && ieee80211_is_tx_data(tx->skb))
-			tx->sta->deflink.tx_stats.last_rate = txrc.reported_rate;
-	} else if (tx->sta)
+
+	/* Null/QoS Null connection probes deliberately use a basic rate.
+	 * Keep the station's data bitrate from being replaced by these
+	 * non-payload frames, including probes sent after a scan.
+	 */
+	if (tx->sta && (encap || ieee80211_is_data_present(hdr->frame_control)))
 		tx->sta->deflink.tx_stats.last_rate = txrc.reported_rate;
 
 	if (ratetbl)
