@@ -22,23 +22,9 @@
 #include <ssv6200.h>
 #include "hctrl.h"
 #include "../include/ssv6051_entry.h"
+#include "smac/lib.h"
 
 static struct ssv6xxx_hci_ctrl *ctrl_hci = NULL;
-
-static struct sk_buff *ssv_skb_alloc(s32 len)
-{
-	struct sk_buff *skb;
-	skb = __dev_alloc_skb(len + SSV6200_ALLOC_RSVD, GFP_KERNEL);
-	if (skb != NULL) {
-		skb_reserve(skb, SSV_SKB_info_size);
-	}
-	return skb;
-}
-
-static void ssv_skb_free(struct sk_buff *skb)
-{
-	dev_kfree_skb_any(skb);
-}
 
 static int ssv6xxx_hci_irq_enable(void)
 {
