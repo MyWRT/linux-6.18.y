@@ -30,6 +30,7 @@
 #include <ssv_firmware_version.h>
 #include "dev_tbl.h"
 #include "dev.h"
+#include "init.h"
 #include "lib.h"
 #include "ssv_rc.h"
 #include "ap.h"
