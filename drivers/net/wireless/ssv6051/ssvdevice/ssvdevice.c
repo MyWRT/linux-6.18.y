@@ -199,11 +199,6 @@ static const struct file_operations ssv6xxx_dbg_fops = {
 	.write = ssv6xxx_dbg_write,
 };
 
-extern int ssv6xxx_hci_init(void);
-extern void ssv6xxx_hci_exit(void);
-extern int ssv6xxx_init(void);
-extern void ssv6xxx_exit(void);
-
 int ssvdevice_init(void)
 {
 	ssv6xxx_cmd_buf =

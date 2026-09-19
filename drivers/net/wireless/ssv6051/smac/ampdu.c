@@ -325,7 +325,7 @@ static void _add_ampdu_txinfo(struct ssv_softc *sc, struct sk_buff *ampdu_skb)
 	tx_desc->tx_report = 1;
 }
 
-void _send_hci_skb(struct ssv_softc *sc, struct sk_buff *skb, u32 tx_flag)
+static void _send_hci_skb(struct ssv_softc *sc, struct sk_buff *skb, u32 tx_flag)
 {
 	struct ssv6200_tx_desc *tx_desc = (struct ssv6200_tx_desc *)skb->data;
 	int ret = AMPDU_HCI_SEND(sc->sh, skb, tx_desc->txq_idx, tx_flag);
@@ -1019,7 +1019,7 @@ void _queue_early_ampdu(struct ssv_softc *sc, struct AMPDU_TID_st *ampdu_tid,
 	spin_unlock_irqrestore(&ampdu_tid->early_aggr_ampdu_q.lock, flags);
 }
 
-void _flush_mpdu(struct ssv_softc *sc, struct ieee80211_sta *sta)
+static void _flush_mpdu(struct ssv_softc *sc, struct ieee80211_sta *sta)
 {
 	unsigned long flags;
 	struct ssv_sta_priv_data *ssv_sta_priv =
@@ -1806,7 +1806,7 @@ static void _reset_ampdu_mib(struct ssv_softc *sc,
 	}
 }
 
-void ssv6xxx_ampdu_mib_reset(struct ieee80211_hw *hw)
+static void ssv6xxx_ampdu_mib_reset(struct ieee80211_hw *hw)
 {
 	struct ssv_softc *sc = hw->priv;
 	if (sc == NULL)
