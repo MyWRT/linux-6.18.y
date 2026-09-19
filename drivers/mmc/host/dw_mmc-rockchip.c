@@ -648,7 +648,7 @@ static void dw_mci_rockchip_shutdown(struct platform_device *pdev)
 	struct mmc_host *mmc = host->mmc;
 
 	if (!IS_ERR(mmc->supply.vqmmc) && !regulator_is_enabled(mmc->supply.vqmmc))
-		regulator_enable(mmc->supply.vqmmc);
+		(void)regulator_enable(mmc->supply.vqmmc);
 }
 
 static struct platform_driver dw_mci_rockchip_pltfm_driver = {

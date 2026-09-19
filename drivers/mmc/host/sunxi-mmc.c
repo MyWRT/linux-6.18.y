@@ -1514,6 +1514,7 @@ static void sunxi_mmc_remove(struct platform_device *pdev)
 	dma_free_coherent(&pdev->dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
 }
 
+#ifdef CONFIG_PM
 static int sunxi_mmc_runtime_resume(struct device *dev)
 {
 	struct mmc_host	*mmc = dev_get_drvdata(dev);
@@ -1547,6 +1548,7 @@ static int sunxi_mmc_runtime_suspend(struct device *dev)
 
 	return 0;
 }
+#endif /* CONFIG_PM */
 
 /*
 static const struct dev_pm_ops sunxi_mmc_pm_ops = {
