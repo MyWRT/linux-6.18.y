@@ -24,6 +24,7 @@
 #include <linux/mmc/card.h>
 #include <linux/mmc/host.h>
 #include "sdio_def.h"
+#include "../../include/ssv6051_entry.h"
 #include <linux/pm_runtime.h>
 #include <linux/version.h>
 #include <linux/firmware.h>
@@ -248,7 +249,7 @@ out:
 
 }
 
-struct file *ssv6xxx_open_firmware(char *user_mainfw)
+static struct file *ssv6xxx_open_firmware(char *user_mainfw)
 {
 	struct file *fp;
 	fp = filp_open(user_mainfw, O_RDONLY, 0);
@@ -259,7 +260,7 @@ struct file *ssv6xxx_open_firmware(char *user_mainfw)
 	return fp;
 }
 
-int ssv6xxx_read_fw_block(char *buf, int len, struct file *fp)
+static int ssv6xxx_read_fw_block(char *buf, int len, struct file *fp)
 {
 
 	int read;
@@ -279,7 +280,7 @@ int ssv6xxx_read_fw_block(char *buf, int len, struct file *fp)
 
 }
 
-void ssv6xxx_close_firmware(struct file *fp)
+static void ssv6xxx_close_firmware(struct file *fp)
 {
 	if (fp)
 		filp_close(fp, NULL);
@@ -1117,11 +1118,14 @@ static int ssv6xxx_sdio_trigger_pmu(struct device *dev)
 	void *tempPointer;
 
 	if (ssv6xxx_sdio_write_reg
-	    (dev, ADR_RX_FLOW_MNG, M_ENG_MACRX | (M_ENG_TRASH_CAN << 4))) ;
+	    (dev, ADR_RX_FLOW_MNG, M_ENG_MACRX | (M_ENG_TRASH_CAN << 4)))
+		;
 	if (ssv6xxx_sdio_write_reg
-	    (dev, ADR_RX_FLOW_DATA, M_ENG_MACRX | (M_ENG_TRASH_CAN << 4))) ;
+	    (dev, ADR_RX_FLOW_DATA, M_ENG_MACRX | (M_ENG_TRASH_CAN << 4)))
+		;
 	if (ssv6xxx_sdio_write_reg
-	    (dev, ADR_RX_FLOW_CTRL, M_ENG_MACRX | (M_ENG_TRASH_CAN << 4))) ;
+	    (dev, ADR_RX_FLOW_CTRL, M_ENG_MACRX | (M_ENG_TRASH_CAN << 4)))
+		;
 
 	host_cmd = (struct cfg_host_cmd *)glue->cmd_skb->data;
 	host_cmd->c_type = HOST_CMD;
